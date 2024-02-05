@@ -41,8 +41,6 @@ class Lego {
         return $this->collection;
     }
 
-
-
     /**
      * Get the value of description
      */
