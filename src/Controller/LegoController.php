@@ -49,7 +49,7 @@ class LegoController extends AbstractController
    {
       $tab = array();
       foreach ($this->legos as $lego){
-         if ($lego->getCollection() ==  $collection){
+         if ($collection ==  str_replace(' ', '_', strtolower($lego->getCollection()))){
             array_push($tab, $lego);
          }
       }
