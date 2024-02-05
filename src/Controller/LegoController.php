@@ -44,12 +44,11 @@ class LegoController extends AbstractController
       return $this->render("lego.html.twig", ["legos" => $this->legos]);
    }
 
-   #[Route('/{collection}', 'filter_by_collection')]
+   #[Route('/{collection}', 'filter_by_collection', requirements:(['page' => '(creator|starwars|expert)']))]
    public function filter($collection): Response
    {
       $tab = array();
       foreach ($this->legos as $lego){
-         // dump($lego->getCollection(), $collection, "____");
          if ($lego->getCollection() ==  $collection){
             array_push($tab, $lego);
          }
