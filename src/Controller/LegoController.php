@@ -13,8 +13,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Lego;
+use App\Entity\LegoCollection;
 use App\Service\CreditsGenerator;
-use App\Service\DatabaseInterface;
+use App\Repository\LegoRepository;
+use App\Repository\LegoCollectionRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -26,15 +28,15 @@ class LegoController extends AbstractController
    // "/" à la méthode home pour que Symfony l'exécute chaque fois
    // que l'on accède à la racine de notre site.
    #[Route('/',)]
-   public function home(DatabaseInterface $database)
+   public function home(LegoRepository $database)
    {
-      return $this->render("lego.html.twig", ["legos" => $database->getAllLegos()]);
+      return $this->render("lego.html.twig", ["legos" => $database->findAll()]);
    }
 
-   #[Route('/{collection}', 'filter_by_collection', requirements:(['collection' => '(creator|star_wars|creator_expert|harry_potter)']))]
-   public function filter($collection, DatabaseInterface $database): Response
+   #[Route('/{name}', 'filter_by_collection', requirements:(['collection' => '(Creator|Star Wars|Creator Expert|Harry Potter)']))]
+   public function filter(LegoCollection $legoCollection): Response
    {
-      return $this->render("lego.html.twig", ["legos" => $database->getLegosByCollection($collection)]);
+      return $this->render("lego.html.twig", ["legos" => $legoCollection->getLegos()]);
    }
 
    #[Route('/credits', 'credits')]
@@ -42,21 +44,4 @@ class LegoController extends AbstractController
    {
        return new Response($credits->getCredits());
    }
-
-   #[Route('/test', 'test')]
-    public function test(EntityManagerInterface $legoManager): Response
-    {
-        $l = new Lego(1234, $legoManager);
-        $l->setName("un beau Lego");
-        $l->setCollection("Lego espace");
-        $l->setDescription("Une description simple");
-        $l->setPrice("11");
-        $l->setPieces("200");
-        $l->setBoxImage("../../public/images/LEGO_10252_Box.png");
-        $l->setLegoImage("../../public/images/LEGO_10252_Main.png");
-        
-        $legoManager->persist($l);
-        $legoManager->flush();
-        return new Response('Saved new product with id' .$l->getId());
-    }
 }

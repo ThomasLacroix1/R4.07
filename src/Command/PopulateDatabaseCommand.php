@@ -9,6 +9,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Lego;
 
 #[AsCommand(
     name: 'app:populate-database',
@@ -16,31 +19,43 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class PopulateDatabaseCommand extends Command
 {
-    public function __construct()
+    private $service;
+
+    public function __construct(EntityManagerInterface $service)
     {
         parent::__construct();
+        $this->service = $service;
     }
 
     protected function configure(): void
     {
         $this
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
+            ->addArgument('json', InputArgument::REQUIRED, 'Argument description')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $arg1 = $input->getArgument('arg1');
+        $json = $input->getArgument('json');
+        $arg1 = file_get_contents(__DIR__ . '/../Data/' . $json);
+        $arg1 = (json_decode($arg1, true));
 
-        if ($arg1) {
-            $io->note(sprintf('You passed an argument: %s', $arg1));
-        }
+        // dd($arg1);
 
-        if ($input->getOption('option1')) {
-            // ...
+        foreach ($arg1 as $el){
+            $l = new Lego($el['id'], $this->service);
+            $l->setName($el['name']);
+            $l->setDescription($el['description']);
+            $l->setPrice($el['price']);
+            $l->setPieces($el['pieces']);
+            $l->setBoxImage($el['images']['box']);
+            $l->setLegoImage($el['images']['bg']);
+            
+            $this->service->persist($l);
+            $this->service->flush();
         }
+        
 
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
 

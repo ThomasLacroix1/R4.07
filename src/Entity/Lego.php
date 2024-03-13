@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\LegoRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LegoRepository::class)]
@@ -16,12 +17,6 @@ class Lego
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $collection = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $description = null;
-
     #[ORM\Column]
     private ?int $price = null;
 
@@ -33,6 +28,13 @@ class Lego
 
     #[ORM\Column(length: 255)]
     private ?string $legoImage = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    private ?string $description = null;
+
+    #[ORM\ManyToOne(inversedBy: 'legos')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?LegoCollection $collection = null;
 
     public function __construct($id){
         $this->id = $id;
@@ -51,30 +53,6 @@ class Lego
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCollection(): ?string
-    {
-        return $this->collection;
-    }
-
-    public function setCollection(string $collection): static
-    {
-        $this->collection = $collection;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): static
-    {
-        $this->description = $description;
 
         return $this;
     }
@@ -123,6 +101,30 @@ class Lego
     public function setLegoImage(string $legoImage): static
     {
         $this->legoImage = $legoImage;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getCollection(): ?LegoCollection
+    {
+        return $this->collection;
+    }
+
+    public function setCollection(?LegoCollection $collection): static
+    {
+        $this->collection = $collection;
 
         return $this;
     }
