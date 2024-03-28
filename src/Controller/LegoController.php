@@ -28,15 +28,16 @@ class LegoController extends AbstractController
    // "/" à la méthode home pour que Symfony l'exécute chaque fois
    // que l'on accède à la racine de notre site.
    #[Route('/',)]
-   public function home(LegoRepository $database)
+   public function home(LegoRepository $database, LegoCollectionRepository $collection)
    {
-      return $this->render("lego.html.twig", ["legos" => $database->findAll()]);
+      // dd($collection->findAll());
+      return $this->render("lego.html.twig", ["legos" => $database->findAll(), "legoCollections" => $collection->findAll()]);
    }
 
    #[Route('/{name}', 'filter_by_collection', requirements:(['collection' => '(Creator|Star Wars|Creator Expert|Harry Potter)']))]
-   public function filter(LegoCollection $legoCollection): Response
+   public function filter(LegoCollection $legoCollection, LegoCollectionRepository $collection): Response
    {
-      return $this->render("lego.html.twig", ["legos" => $legoCollection->getLegos()]);
+      return $this->render("lego.html.twig", ["legos" => $legoCollection->getLegos(), "legoCollections" => $collection->findAll()]);
    }
 
    #[Route('/credits', 'credits')]

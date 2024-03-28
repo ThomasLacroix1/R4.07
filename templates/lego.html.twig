@@ -1,13 +1,17 @@
 {% extends "./base.html.twig" %}
 {% block body %}
-{% for lego in legos %}
   <nav>
     <a href="/">All</a> |
+    {% for collection in legoCollections %}
+      <a href="/{{collection.name}}">{{collection.name}}</a> |
+    {# <a href="/">All</a> |
     <a href="/Creator">Creator</a> |
     <a href="/Star Wars">Star Wars</a> |
     <a href="/Creator Expert">Creator Expert</a> |
-    <a href="/Harry Potter">Harry Potter</a>
+    <a href="/Harry Potter">Harry Potter</a> #}
+    {% endfor %}
   </nav>
+{% for lego in legos %}
   <div class="lego_card">
         <div class="info_section">
           <div class="lego_header">

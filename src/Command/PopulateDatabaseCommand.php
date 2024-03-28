@@ -41,8 +41,6 @@ class PopulateDatabaseCommand extends Command
         $arg1 = file_get_contents(__DIR__ . '/../Data/' . $json);
         $arg1 = (json_decode($arg1, true));
 
-        // dd($arg1);
-
         foreach ($arg1 as $el){
             $l = new Lego($el['id'], $this->service);
             $l->setName($el['name']);

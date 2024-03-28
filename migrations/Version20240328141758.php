@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240313093543 extends AbstractMigration
+final class Version20240328141758 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,18 +20,16 @@ final class Version20240313093543 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE TABLE lego (id INT AUTO_INCREMENT NOT NULL, collection_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, price INT NOT NULL, pieces INT NOT NULL, box_image VARCHAR(255) NOT NULL, lego_image VARCHAR(255) NOT NULL, description LONGTEXT NOT NULL, INDEX IDX_E9191FC5514956FD (collection_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE lego_collection (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('ALTER TABLE lego ADD collection_id INT NOT NULL');
         $this->addSql('ALTER TABLE lego ADD CONSTRAINT FK_E9191FC5514956FD FOREIGN KEY (collection_id) REFERENCES lego_collection (id)');
-        $this->addSql('CREATE INDEX IDX_E9191FC5514956FD ON lego (collection_id)');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE lego DROP FOREIGN KEY FK_E9191FC5514956FD');
+        $this->addSql('DROP TABLE lego');
         $this->addSql('DROP TABLE lego_collection');
-        $this->addSql('DROP INDEX IDX_E9191FC5514956FD ON lego');
-        $this->addSql('ALTER TABLE lego DROP collection_id');
     }
 }

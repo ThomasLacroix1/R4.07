@@ -33,7 +33,7 @@ class Lego
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'legos')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?LegoCollection $collection = null;
 
     public function __construct($id){
